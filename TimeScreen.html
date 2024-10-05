@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time</title>
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+        body {
+           
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-color, white);
+            color: var(--time-color, black);
+           
+        }
+        .clock {
+            font-family: "Kanit", sans-serif;
+            font-weight: 800;
+            font-style: normal;
+            font-size: 5rem;
+        }
+        #preferences {
+            font-family: "Kanit", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #000000;
+            color: #000000;
+            background-color: #ffffff;
+            display: none;
+            flex-direction: column;
+            /* border-style: none; */
+            gap: 10px;
+        }
+        img.colorpick-eyedropper-input-trigger {
+        display: none;
+        }
+
+        input[type="color" i]{
+            border-style: none;
+        }
+        #savePreferences{
+            border: 1px solid black;
+            background-color: #ffffff;
+            margin-top:18px ;
+            padding: 8px;
+        }
+        #closePreferences{
+            border: 1px solid black;
+            background-color: #ffffff;
+            margin-top:0px ;
+            padding: 8px;
+        }
+        #closePreferences:hover{
+            border: 1px solid rgb(255, 255, 255);
+            background-color: #000000;
+            color: white;
+        }
+        #savePreferences:hover{
+            border: 1px solid rgb(255, 255, 255);
+            background-color: #000000;
+            color: white;
+        }
+
+
+        button {
+            
+            border: 1px solid #000000;
+            background-color: rgb(226, 226, 226);
+            border-style: none;
+            border-radius: 16px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        #preferencesButton {
+
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="clock" id="clock"></div>
+
+    <button id="preferencesButton">⚙️</button>
+
+    <div id="preferences">
+        <label>
+            Time Color: 
+            <input type="color" id="timeColorPicker">
+        </label>
+        <label>
+            Background Color: 
+            <input type="color" id="bgColorPicker">
+        </label>
+        <button id="savePreferences">Save Preferences</button>
+        <button id="closePreferences">Close</button>
+    </div>
+
+    <script>
+        const clock = document.getElementById('clock');
+        const preferencesButton = document.getElementById('preferencesButton');
+        const preferences = document.getElementById('preferences');
+        const savePreferencesButton = document.getElementById('savePreferences');
+        const closePreferencesButton = document.getElementById('closePreferences');
+        const timeColorPicker = document.getElementById('timeColorPicker');
+        const bgColorPicker = document.getElementById('bgColorPicker');
+
+        // Load preferences from localStorage
+        function loadPreferences() {
+            const savedTimeColor = localStorage.getItem('timeColor');
+            const savedBgColor = localStorage.getItem('bgColor');
+
+            if (savedTimeColor) {
+                document.documentElement.style.setProperty('--time-color', savedTimeColor);
+                timeColorPicker.value = savedTimeColor;
+            }
+
+            if (savedBgColor) {
+                document.documentElement.style.setProperty('--bg-color', savedBgColor);
+                bgColorPicker.value = savedBgColor;
+            }
+        }
+
+        // Display current time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            clock.textContent = timeString;
+        }
+
+        // Save preferences to localStorage
+        function savePreferences() {
+            const timeColor = timeColorPicker.value;
+            const bgColor = bgColorPicker.value;
+
+            localStorage.setItem('timeColor', timeColor);
+            localStorage.setItem('bgColor', bgColor);
+
+            document.documentElement.style.setProperty('--time-color', timeColor);
+            document.documentElement.style.setProperty('--bg-color', bgColor);
+        }
+
+        // Show/Hide preferences panel
+        preferencesButton.addEventListener('click', () => {
+            preferences.style.display = preferences.style.display === 'none' ? 'flex' : 'none';
+        });
+
+        closePreferencesButton.addEventListener('click', () => {
+            preferences.style.display = 'none';
+        });
+
+        savePreferencesButton.addEventListener('click', () => {
+            savePreferences();
+            preferences.style.display = 'none';
+        });
+
+        // Update time every second
+        setInterval(updateTime, 1000);
+
+        // Load preferences on page load
+        loadPreferences();
+
+        // Initial time update
+        updateTime();
+    </script>
+</body>
+</html>
